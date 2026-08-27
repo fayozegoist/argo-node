@@ -169,7 +169,7 @@ class HybridServer {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>GATEWAY</title>
+          <title>ARGO TUNNEL</title>
                      <style>
             *{box-sizing:border-box;margin:0;padding:0}
             html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
@@ -233,7 +233,7 @@ class HybridServer {
               letter-spacing:0.28em;
               text-transform:uppercase;
               color:#F2F2F2;
-              text-shadow:0 1px 12px rgba(255,214,10,0.18);
+              text-shadow:0 1px 12px rgba(125,211,224,0.22);
             }
             .content{ padding:26px 26px 22px; }
             .eyebrow{
@@ -258,8 +258,8 @@ class HybridServer {
             .group-line{
               width:14px;
               height:1px;
-              background:linear-gradient(90deg, rgba(255,214,10,0.9) 0%, rgba(255,214,10,0.15) 100%);
-              box-shadow:0 0 8px rgba(255,214,10,0.35);
+              background:linear-gradient(90deg, rgba(125,211,224,0.95) 0%, rgba(14,47,90,0.25) 100%);
+              box-shadow:0 0 8px rgba(125,211,224,0.45);
             }
             .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
             .grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
@@ -292,8 +292,8 @@ class HybridServer {
             button.proto:hover{ background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.10); color:#FFFFFF; transform:translateY(-1px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 6px 20px rgba(0,0,0,0.35); }
             button.proto:hover::before{ opacity:1; }
             button.proto:active{ transform:translateY(0) scale(0.99); }
-            button.proto.active{ background:linear-gradient(135deg, #FFD60A 0%, #FFA500 100%); border-color:rgba(255,214,10,0.9); color:#0A0A0A; font-weight:650; box-shadow:0 6px 24px rgba(255,214,10,0.35), inset 0 1px 0 rgba(255,255,255,0.35); }
-            button.proto.active:hover{ background:linear-gradient(135deg, #FFE14A 0%, #FFB700 100%); }
+            button.proto.active{ background:linear-gradient(90deg, #8ECDF0 0%, #7DD3E0 30%, #1E5A8A 75%, #0B2F5C 100%); border-color:rgba(125,211,224,0.85); color:#FFFFFF; font-weight:650; box-shadow:0 6px 24px rgba(30,90,138,0.45), inset 0 1px 0 rgba(255,255,255,0.30); }
+            button.proto.active:hover{ background:linear-gradient(90deg, #A0E0F2 0%, #8ECDF0 30%, #2A6BA3 75%, #143A6B 100%); }
             .output{
               margin-top:20px;
               padding-top:20px;
@@ -325,7 +325,7 @@ class HybridServer {
               box-shadow:inset 0 1px 0 rgba(255,255,255,0.03);
             }
             input#config-output::placeholder{ color:#6A6A6A; }
-            input#config-output:focus{ border-color:rgba(255,214,10,0.28); background:rgba(10,10,12,0.75); box-shadow:0 0 0 3px rgba(255,214,10,0.08); }
+            input#config-output:focus{ border-color:rgba(125,211,224,0.32); background:rgba(10,10,12,0.75); box-shadow:0 0 0 3px rgba(125,211,224,0.10); }
             .btn-copy{
               height:42px;
               padding:0 18px;
@@ -354,7 +354,7 @@ class HybridServer {
             .wildcard{ margin-top:18px; padding-top:18px; border-top:1px solid rgba(255,255,255,0.06); }
             .wildcard-list{ display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
             .chip{ display:inline-flex; align-items:center; padding:8px 13px; background:rgba(255,255,255,0.04); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.07); border-radius:999px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:13px; font-weight:500; color:#D0D0D0; letter-spacing:0.01em; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:all 0.2s ease; }
-            .chip:hover{ border-color:rgba(255,214,10,0.22); color:#FFFFFF; background:rgba(255,255,255,0.06); box-shadow:0 2px 12px rgba(255,214,10,0.12); transform:translateY(-1px); }
+            .chip:hover{ border-color:rgba(125,211,224,0.28); color:#FFFFFF; background:rgba(255,255,255,0.06); box-shadow:0 2px 12px rgba(30,90,138,0.18); transform:translateY(-1px); }
             .footer{
               margin-top:16px;
               text-align:center;
@@ -377,8 +377,8 @@ class HybridServer {
               transition:all 0.22s ease;
               box-shadow:0 4px 16px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
             }
-            .support-link:hover{ color:#FFFFFF; background:rgba(255,255,255,0.07); border-color:rgba(255,214,10,0.22); box-shadow:0 6px 20px rgba(0,0,0,0.35), 0 0 14px rgba(255,214,10,0.12); transform:translateY(-1px); }
-            .support-link svg{ flex-shrink:0; filter:drop-shadow(0 0 6px rgba(255,214,10,0.25)); }
+            .support-link:hover{ color:#FFFFFF; background:rgba(255,255,255,0.07); border-color:rgba(125,211,224,0.28); box-shadow:0 6px 20px rgba(0,0,0,0.35), 0 0 14px rgba(125,211,224,0.16); transform:translateY(-1px); }
+            .support-link svg{ flex-shrink:0; filter:drop-shadow(0 0 6px rgba(125,211,224,0.35)); }
             @media (max-width:560px){
               body{ padding:28px 16px 24px; }
               .content{ padding:20px 18px 18px; }
@@ -398,7 +398,7 @@ class HybridServer {
           <div class="bg-orbs" aria-hidden="true"><div class="orb orb1"></div><div class="orb orb2"></div></div>
           <div class="shell" id="shell">
             <div class="panel">
-              <div class="header"><div class="brand">Gateway</div></div>
+              <div class="header"><div class="brand">ARGO TUNNEL</div></div>
               <div class="content">
                 <div class="group reveal">
                   <div class="group-head"><div class="group-line"></div><div class="eyebrow">Bug SNI</div></div>
@@ -416,7 +416,7 @@ class HybridServer {
                   </div>
                 </div>
                 <div class="output">
-                  <div class="field"><input type="text" id="config-output" readonly placeholder="Select a configuration to generate" /></div>
+                  <div class="field"><input type="text" id="config-output" readonly placeholder="" /></div>
                   <button class="btn-copy" id="copy-btn" onclick="copyConfig()">Copy</button>
                 </div>
                 <div class="hint" id="hint">Choose VLESS / VMESS / TROJAN above. Config will appear here.</div>
