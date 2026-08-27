@@ -203,7 +203,7 @@ class HybridServer {
               position:fixed;
               inset:0;
               z-index:-1;
-              background:linear-gradient(180deg, rgba(7,8,10,0.02) 0%, rgba(7,8,10,0.06) 100%);
+              background:rgba(0,0,0,0.08);
               backdrop-filter:brightness(0.95);
               -webkit-backdrop-filter:brightness(0.95);
               pointer-events:none;
@@ -225,10 +225,10 @@ class HybridServer {
               will-change:transform;
             }
             .panel{
-              background:rgba(255,255,255,0.04);
-              backdrop-filter:blur(4px) saturate(110%);
-              -webkit-backdrop-filter:blur(4px) saturate(110%);
-              border:1px solid rgba(255,255,255,0.07);
+              background:rgba(8,10,14,0.32);
+              backdrop-filter:none;
+              -webkit-backdrop-filter:none;
+              border:1px solid rgba(255,255,255,0.09);
               border-radius:20px;
               overflow:hidden;
               box-shadow:0 16px 48px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06) inset, 0 0 0 1px rgba(255,255,255,0.02) inset;
@@ -242,9 +242,9 @@ class HybridServer {
               align-items:center;
               justify-content:center;
               border-bottom:1px solid rgba(255,255,255,0.06);
-              background:rgba(255,255,255,0.03);
-              backdrop-filter:blur(4px);
-              -webkit-backdrop-filter:blur(4px);
+              background:rgba(8,10,14,0.26);
+              backdrop-filter:none;
+              -webkit-backdrop-filter:none;
             }
             .brand{
               font-size:13px;
@@ -264,8 +264,8 @@ class HybridServer {
               margin-bottom:12px;
               text-shadow:0 1px 10px rgba(0,0,0,0.65);
             }
-            .group{ margin-bottom:16px; background:rgba(255,255,255,0.03); backdrop-filter:blur(4px) saturate(110%); -webkit-backdrop-filter:blur(4px) saturate(110%); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:14px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:transform 0.35s cubic-bezier(0.23,1,0.32,1), border-color 0.3s ease, background 0.3s ease; transform:translateZ(0);}
-            .group:hover{ border-color:rgba(255,214,10,0.12); background:rgba(255,255,255,0.045); }
+            .group{ margin-bottom:16px; background:rgba(8,10,14,0.26); backdrop-filter:none; -webkit-backdrop-filter:none; border:1px solid rgba(255,255,255,0.09); border-radius:14px; padding:14px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:transform 0.35s cubic-bezier(0.23,1,0.32,1), border-color 0.3s ease, background 0.3s ease; transform:translateZ(0);}
+            .group:hover{ border-color:rgba(255,214,10,0.12); background:rgba(8,10,14,0.32); }
             .group.reveal{ opacity:0; transform:translateY(14px) translateZ(0); }
             .group.reveal.in{ opacity:1; transform:translateY(0) translateZ(0); }
             .group:last-of-type{ margin-bottom:0; }
@@ -285,10 +285,10 @@ class HybridServer {
             .grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
             button.proto{
               height:44px;
-              background:rgba(255,255,255,0.022);
-              backdrop-filter:blur(4px);
-              -webkit-backdrop-filter:blur(4px);
-              border:1px solid rgba(255,255,255,0.07);
+              background:rgba(8,10,14,0.22);
+              backdrop-filter:none;
+              -webkit-backdrop-filter:none;
+              border:1px solid rgba(255,255,255,0.09);
               border-radius:11px;
               color:#E8E8E8;
               font-size:13px;
@@ -330,10 +330,10 @@ class HybridServer {
             }
             input#config-output{
               width:100%;
-              background:rgba(255,255,255,0.04);
-              backdrop-filter:blur(4px);
-              -webkit-backdrop-filter:blur(4px);
-              border:1px solid rgba(255,255,255,0.07);
+              background:rgba(8,10,14,0.26);
+              backdrop-filter:none;
+              -webkit-backdrop-filter:none;
+              border:1px solid rgba(255,255,255,0.09);
               color:#E8E8E8;
               padding:13px 14px;
               border-radius:11px;
@@ -345,12 +345,12 @@ class HybridServer {
               box-shadow:inset 0 1px 0 rgba(255,255,255,0.03);
             }
             input#config-output::placeholder{ color:#6A6A6A; }
-            input#config-output:focus{ border-color:rgba(125,211,224,0.32); background:rgba(10,10,12,0.75); box-shadow:0 0 0 3px rgba(125,211,224,0.10); }
+            input#config-output:focus{ border-color:rgba(125,211,224,0.32); background:rgba(8,10,14,0.32); box-shadow:0 0 0 3px rgba(125,211,224,0.10); }
             .btn-copy{
               height:42px;
               padding:0 18px;
               background:rgba(242,242,242,0.95);
-              backdrop-filter:blur(4px);
+              backdrop-filter:none;
               color:#080808;
               border:1px solid rgba(255,255,255,0.9);
               border-radius:11px;
@@ -374,7 +374,7 @@ class HybridServer {
             }
             .wildcard{ margin-top:18px; padding-top:18px; border-top:1px solid rgba(255,255,255,0.06); }
             .wildcard-list{ display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
-            .chip{ display:inline-flex; align-items:center; padding:8px 13px; background:rgba(255,255,255,0.04); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,0.07); border-radius:999px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:13px; font-weight:500; color:#F0F0F0; letter-spacing:0.01em; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:all 0.2s ease; }
+            .chip{ display:inline-flex; align-items:center; padding:8px 13px; background:rgba(8,10,14,0.26); backdrop-filter:none; -webkit-backdrop-filter:none; border:1px solid rgba(255,255,255,0.09); border-radius:999px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:13px; font-weight:500; color:#F0F0F0; letter-spacing:0.01em; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:all 0.2s ease; }
             .chip:hover{ border-color:rgba(125,211,224,0.28); color:#FFFFFF; background:rgba(255,255,255,0.06); box-shadow:0 2px 12px rgba(30,90,138,0.18); transform:translateY(-1px); }
             .footer{
               margin-top:16px;
@@ -389,10 +389,10 @@ class HybridServer {
               font-size:13px;
               font-weight:500;
               letter-spacing:0.04em;
-              background:rgba(255,255,255,0.04);
-              backdrop-filter:blur(4px);
-              -webkit-backdrop-filter:blur(4px);
-              border:1px solid rgba(255,255,255,0.07);
+              background:rgba(8,10,14,0.26);
+              backdrop-filter:none;
+              -webkit-backdrop-filter:none;
+              border:1px solid rgba(255,255,255,0.09);
               padding:9px 16px;
               border-radius:999px;
               transition:all 0.22s ease;
@@ -408,7 +408,7 @@ class HybridServer {
               .btn-copy{ width:100%; justify-content:center; }
               .orb1{ width:380px; height:380px; }
               .orb2{ width:420px; height:420px; }
-              .panel{ backdrop-filter:blur(4px) saturate(140%); -webkit-backdrop-filter:blur(4px) saturate(140%); }
+              .panel{ backdrop-filter:none; -webkit-backdrop-filter:none; }
             }
             @supports not (backdrop-filter: blur(1px)){
               .panel, .group, .chip, input#config-output{ background:#151515; }
