@@ -137,68 +137,11 @@ class HybridServer {
     this.wss = null;
     this.httpServer = null;
     this.activeUDPConnections = new Map();
-    this.stats = { rx: 0, tx: 0 };
-    this.lastCpu = null;
   }
 
   async handleHttpRequest(req, res) {
     const parsedUrl = url.parse(req.url, true);
     
-    // API Statistik (GLOBAL TRAFFIC + CPU + RAM)
-    if (parsedUrl.pathname === '/api/stats') {
-      let currentRx = this.stats.rx;
-      let currentTx = this.stats.tx;
-
-      // Baca Trafik Linux
-      try {
-        if (fs.existsSync('/proc/net/dev')) {
-          const devData = fs.readFileSync('/proc/net/dev', 'utf-8');
-          const lines = devData.split('\n');
-          let sysRx = 0, sysTx = 0;
-          for (let i = 2; i < lines.length; i++) {
-            const line = lines[i].trim();
-            if (!line || line.startsWith('lo:')) continue; 
-            const parts = line.split(/:?\s+/);
-            if (parts.length > 9) {
-              sysRx += parseInt(parts[1] || 0, 10);
-              sysTx += parseInt(parts[9] || 0, 10);
-            }
-          }
-          if (sysRx > 0 || sysTx > 0) { currentRx = sysRx; currentTx = sysTx; }
-        }
-      } catch (e) {}
-
-      // Kalkulasi CPU
-      const cpus = os.cpus();
-      let user = 0, nice = 0, sys = 0, idle = 0, irq = 0;
-      for (let cpu in cpus) {
-        user += cpus[cpu].times.user; nice += cpus[cpu].times.nice;
-        sys += cpus[cpu].times.sys; idle += cpus[cpu].times.idle;
-        irq += cpus[cpu].times.irq;
-      }
-      const totalCpu = user + nice + sys + idle + irq;
-      if (!this.lastCpu) this.lastCpu = { idle, total: totalCpu };
-      const idleDelta = idle - this.lastCpu.idle;
-      const totalDelta = totalCpu - this.lastCpu.total;
-      const cpuUsage = totalDelta === 0 ? 0 : (100 - (100 * idleDelta / totalDelta)).toFixed(1);
-      this.lastCpu = { idle, total: totalCpu };
-
-      // Kalkulasi RAM
-      const totalMem = os.totalmem();
-      const freeMem = os.freemem();
-      const ramUsage = ((totalMem - freeMem) / totalMem * 100).toFixed(1);
-
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({
-        uptime: Math.floor(process.uptime()),
-        rx: currentRx,
-        tx: currentTx,
-        cpu: parseFloat(cpuUsage),
-        ram: parseFloat(ramUsage)
-      }));
-      return;
-    }
-
     // API Config Terpusat
     if (parsedUrl.pathname === '/api/config') {
       const host = req.headers.host;
@@ -226,313 +169,219 @@ class HybridServer {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>GATEWAY CORE</title>
+          <title>GATEWAY</title>
           <style>
-            :root {
-              --bg-black: #000000;
-              --panel-bg: #0a0a0a;
-              --card-bg: #050505;
-              --border-color: #1f1f1f;
-              --border-hover: #333333;
-              --text-main: #ffffff;
-              --text-muted: #888888;
-              --accent-blue: #0088FF;
-              --accent-cyan: #00ffff;
-              --accent-purple: #a855f7;
-              --accent-pink: #ff0080;
-              --status-green: #00df89;
-              --status-red: #ff5f56;
+            *{box-sizing:border-box;margin:0;padding:0}
+            html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+            body{
+              background:#080808;
+              color:#f2f2f2;
+              font-family:-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+              min-height:100vh;
+              display:flex;
+              flex-direction:column;
+              align-items:center;
+              padding:56px 20px 40px;
             }
-
-            * { box-sizing: border-box; margin: 0; padding: 0; }
-
-            body {
-              background-color: var(--bg-black);
-              color: var(--text-main);
-              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-              min-height: 100vh;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              padding: 6vh 24px;
+            .shell{
+              width:100%;
+              max-width:520px;
             }
-
-            .window-container {
-              width: 100%;
-              max-width: 680px;
-              background-color: var(--panel-bg);
-              border: 1px solid var(--border-color);
-              border-radius: 12px;
-              box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
-              overflow: hidden;
+            .panel{
+              background:#111111;
+              border:1px solid #1e1e1e;
+              border-radius:16px;
+              overflow:hidden;
             }
-
-            .window-header {
-              background-color: var(--card-bg);
-              border-bottom: 1px solid var(--border-color);
-              padding: 14px 20px;
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
+            .header{
+              height:54px;
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              border-bottom:1px solid #1a1a1a;
+              background:#111111;
             }
-
-            .mac-dots { display: flex; gap: 8px; }
-            .dot { width: 12px; height: 12px; border-radius: 50%; opacity: 0.75; }
-            .dot.close { background-color: #ff5f56; }
-            .dot.minimize { background-color: #ffbd2e; }
-            .dot.zoom { background-color: #27c93f; }
-
-            .brand-title { font-size: 0.8rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
-            .brand-media { color: #ffffff; }
-            .brand-fairy { color: var(--accent-blue); }
-
-            .status-badge { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 600; color: var(--status-green); }
-            .pulse-dot {
-              width: 6px; height: 6px; background-color: var(--status-green);
-              border-radius: 50%; box-shadow: 0 0 8px var(--status-green);
-              animation: ambientPulse 2.5s infinite ease-in-out;
+            .brand{
+              font-size:10px;
+              font-weight:600;
+              letter-spacing:0.32em;
+              text-transform:uppercase;
+              color:#8a8a8a;
             }
-
-            .window-content { padding: 32px; }
-
-            .uptime-section { text-align: center; padding-bottom: 24px; border-bottom: 1px solid var(--border-color); margin-bottom: 24px; }
-            .section-label { font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 2px; margin-bottom: 6px; }
-            .uptime-display { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
-
-            /* 4 Columns Grid */
-            .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-            .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; position: relative; overflow: hidden; }
-            .card-value { font-size: 1.25rem; font-weight: 700; margin-top: 4px; font-variant-numeric: tabular-nums; }
-            .live-speed { font-size: 0.75rem; font-family: monospace; font-weight: 600; margin-top: 6px; }
-            .live-speed.down { color: var(--status-green); }
-            .live-speed.up { color: var(--accent-blue); }
-            .resource-bar { width: 100%; height: 3px; background-color: #222; position: absolute; bottom: 0; left: 0; }
-            .resource-fill { height: 100%; background-color: var(--accent-cyan); transition: width 1s ease; }
-
-            /* Live Chart */
-            .chart-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-bottom: 32px; }
-            .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-            .legend { display: flex; gap: 12px; font-size: 0.7rem; color: var(--text-muted); font-weight: 600; }
-            .legend-item { display: flex; align-items: center; gap: 4px; }
-            .legend-color { width: 8px; height: 8px; border-radius: 50%; }
-            .c-down { background-color: var(--status-green); box-shadow: 0 0 5px var(--status-green); }
-            .c-up { background-color: var(--accent-blue); box-shadow: 0 0 5px var(--accent-blue); }
-            .canvas-container { width: 100%; height: 120px; position: relative; }
-            canvas { width: 100%; height: 100%; display: block; }
-
-            .generator-section { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; }
-            .group-title { font-size: 0.75rem; font-weight: 600; color: var(--text-main); margin-bottom: 10px; border-left: 2px solid var(--border-hover); padding-left: 8px; }
-            
-            .btn-group-native { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-            .btn-group-argo { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-            
-            button { background-color: #111; color: #fff; border: 1px solid var(--border-color); padding: 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-            button:hover { background-color: #222; border-color: #444; }
-            button:active { transform: scale(0.98); }
-            .btn-vless:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
-            .btn-vmess:hover { border-color: var(--accent-purple); color: var(--accent-purple); }
-            .btn-trojan:hover { border-color: var(--accent-pink); color: var(--accent-pink); }
-
-            .output-wrapper { display: flex; gap: 8px; margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 20px; }
-            input[type="text"] { flex: 1; background-color: #000; border: 1px solid var(--border-color); color: var(--status-green); padding: 12px 16px; border-radius: 6px; font-family: monospace; font-size: 0.75rem; outline: none; }
-            input[type="text"]:focus { border-color: var(--border-hover); color: var(--text-main); }
-            .btn-copy { background-color: var(--text-main); color: var(--bg-black); padding: 0 20px; border: none; font-weight: 600; }
-            .btn-copy:hover { background-color: #e0e0e0; }
-
-            @media (max-width: 600px) {
-              body { padding: 4vh 16px; }
-              .stats-grid { grid-template-columns: 1fr 1fr; }
-              .output-wrapper { flex-direction: column; }
-              .btn-copy { padding: 12px; }
+            .content{ padding:26px 26px 22px; }
+            .eyebrow{
+              font-size:10px;
+              font-weight:600;
+              letter-spacing:0.14em;
+              text-transform:uppercase;
+              color:#5a5a5a;
+              margin-bottom:12px;
             }
-
-            @keyframes ambientPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+            .group{ margin-bottom:20px; }
+            .group:last-of-type{ margin-bottom:0; }
+            .group-head{
+              display:flex;
+              align-items:center;
+              gap:8px;
+              margin-bottom:10px;
+            }
+            .group-line{
+              width:12px;
+              height:1px;
+              background:#2a2a2a;
+            }
+            .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+            .grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+            button.proto{
+              height:42px;
+              background:#161616;
+              border:1px solid #232323;
+              border-radius:9px;
+              color:#d4d4d4;
+              font-size:13px;
+              font-weight:500;
+              letter-spacing:0.01em;
+              cursor:pointer;
+              transition:background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.08s ease;
+            }
+            button.proto:hover{ background:#1a1a1a; border-color:#2a2a2a; color:#f2f2f2; }
+            button.proto:active{ transform:scale(0.99); }
+            button.proto.active{ background:#f2f2f2; border-color:#f2f2f2; color:#080808; }
+            .output{
+              margin-top:20px;
+              padding-top:20px;
+              border-top:1px solid #1a1a1a;
+              display:flex;
+              gap:8px;
+              align-items:center;
+            }
+            .field{
+              flex:1;
+              position:relative;
+              display:flex;
+              align-items:center;
+            }
+            input#config-output{
+              width:100%;
+              background:#0a0a0a;
+              border:1px solid #1e1e1e;
+              color:#a8a8a8;
+              padding:13px 14px;
+              border-radius:9px;
+              font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+              font-size:12px;
+              line-height:1.4;
+              outline:none;
+              transition:border-color 0.15s ease, color 0.15s ease;
+            }
+            input#config-output::placeholder{ color:#4a4a4a; }
+            input#config-output:focus{ border-color:#2a2a2a; color:#f2f2f2; }
+            .btn-copy{
+              height:42px;
+              padding:0 18px;
+              background:#f2f2f2;
+              color:#080808;
+              border:1px solid #f2f2f2;
+              border-radius:9px;
+              font-size:13px;
+              font-weight:600;
+              letter-spacing:0.01em;
+              cursor:pointer;
+              white-space:nowrap;
+              transition:background 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+            }
+            .btn-copy:hover{ background:#e8e8e8; border-color:#e8e8e8; }
+            .btn-copy:active{ transform:scale(0.98); }
+            .hint{
+              margin-top:10px;
+              font-size:11px;
+              color:#4a4a4a;
+              line-height:1.5;
+              letter-spacing:0.01em;
+            }
+            .footer{
+              margin-top:14px;
+              text-align:center;
+              font-size:11px;
+              color:#3a3a3a;
+              letter-spacing:0.02em;
+            }
+            @media (max-width:560px){
+              body{ padding:28px 16px 24px; }
+              .content{ padding:20px 18px 18px; }
+              .grid-3{ grid-template-columns:1fr; }
+              .output{ flex-direction:column; align-items:stretch; }
+              .btn-copy{ width:100%; justify-content:center; }
+            }
           </style>
         </head>
         <body>
-          <div class="window-container">
-            <div class="window-header">
-              <div class="mac-dots"><div class="dot close"></div><div class="dot minimize"></div><div class="dot zoom"></div></div>
-              <div class="brand-title"><span class="brand-media">MEDIA</span><span class="brand-fairy">FAIRY</span></div>
-              <div class="status-badge"><div class="pulse-dot"></div>RUNNING</div>
-            </div>
-
-            <div class="window-content">
-              <div class="uptime-section">
-                <div class="section-label">System Uptime</div>
-                <div class="uptime-display" id="uptime-field">00:00:00</div>
-              </div>
-              
-              <div class="stats-grid">
-                <div class="card">
-                  <div class="section-label">CPU</div>
-                  <div class="card-value" id="cpu-val">0%</div>
-                  <div class="resource-bar"><div class="resource-fill" id="cpu-bar" style="width:0%"></div></div>
-                </div>
-                <div class="card">
-                  <div class="section-label">RAM</div>
-                  <div class="card-value" id="ram-val">0%</div>
-                  <div class="resource-bar"><div class="resource-fill" id="ram-bar" style="width:0%"></div></div>
-                </div>
-                <div class="card">
-                  <div class="section-label">Download</div>
-                  <div class="card-value" id="dl-total">0 B</div>
-                  <div class="live-speed down" id="dl-speed">↓ 0 B/s</div>
-                </div>
-                <div class="card">
-                  <div class="section-label">Upload</div>
-                  <div class="card-value" id="ul-total">0 B</div>
-                  <div class="live-speed up" id="ul-speed">↑ 0 B/s</div>
-                </div>
-              </div>
-
-              <div class="chart-card">
-                <div class="chart-header">
-                  <div class="section-label" style="margin:0;">Network Traffic (60s)</div>
-                  <div class="legend">
-                    <div class="legend-item"><div class="legend-color c-down"></div>RX</div>
-                    <div class="legend-item"><div class="legend-color c-up"></div>TX</div>
+          <div class="shell">
+            <div class="panel">
+              <div class="header"><div class="brand">Gateway</div></div>
+              <div class="content">
+                <div class="group">
+                  <div class="group-head"><div class="group-line"></div><div class="eyebrow">Bug SNI</div></div>
+                  <div class="grid-2">
+                    <button class="proto" onclick="generate('native','vless',this)">VLESS</button>
+                    <button class="proto" onclick="generate('native','trojan',this)">TROJAN</button>
                   </div>
                 </div>
-                <div class="canvas-container">
-                  <canvas id="trafficChart"></canvas>
+                <div class="group">
+                  <div class="group-head"><div class="group-line"></div><div class="eyebrow">Bug CDN</div></div>
+                  <div class="grid-3">
+                    <button class="proto" onclick="generate('argo','vless',this)">VLESS</button>
+                    <button class="proto" onclick="generate('argo','vmess',this)">VMESS</button>
+                    <button class="proto" onclick="generate('argo','trojan',this)">TROJAN</button>
+                  </div>
                 </div>
-              </div>
-
-              <div class="generator-section">
-                <div class="group-title">⚡ BUG SNI</div>
-                <div class="btn-group-native">
-                  <button class="btn-vless" onclick="generate('native', 'vless')">VLESS</button>
-                  <button class="btn-trojan" onclick="generate('native', 'trojan')">TROJAN</button>
-                </div>
-                <div class="group-title">🚀 BUG CDN</div>
-                <div class="btn-group-argo">
-                  <button class="btn-vless" onclick="generate('argo', 'vless')">VLESS</button>
-                  <button class="btn-vmess" onclick="generate('argo', 'vmess')">VMESS</button>
-                  <button class="btn-trojan" onclick="generate('argo', 'trojan')">TROJAN</button>
-                </div>
-                <div class="output-wrapper">
-                  <input type="text" id="config-output" readonly placeholder="Pilih salah satu konfigurasi di atas..." />
+                <div class="output">
+                  <div class="field"><input type="text" id="config-output" readonly placeholder="Select a configuration to generate" /></div>
                   <button class="btn-copy" id="copy-btn" onclick="copyConfig()">Copy</button>
                 </div>
+                <div class="hint" id="hint">Choose VLESS / VMESS / TROJAN above. Config will appear here.</div>
               </div>
             </div>
+            <div class="footer">Monochrome &middot; No telemetry</div>
           </div>
-
           <script>
-            function formatBytes(bytes) {
-              if (bytes === 0) return '0 B'; const k = 1024, sizes = ['B', 'KB', 'MB', 'GB', 'TB'], i = Math.floor(Math.log(bytes) / Math.log(k));
-              return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-            }
-            function formatTime(ts) {
-              const d = Math.floor(ts/86400), h = Math.floor((ts%86400)/3600), m = Math.floor((ts%3600)/60), s = ts%60;
-              return (d>0?d+'d ':'') + String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-            }
-
-            // Chart Configuration
-            const canvas = document.getElementById('trafficChart');
-            const ctx = canvas.getContext('2d');
-            const maxPoints = 60;
-            let rxHistory = new Array(maxPoints).fill(0);
-            let txHistory = new Array(maxPoints).fill(0);
-            let lastRx = 0, lastTx = 0, isFirstRender = true;
-
-            function drawChart() {
-              const rect = canvas.parentElement.getBoundingClientRect();
-              canvas.width = rect.width * window.devicePixelRatio;
-              canvas.height = rect.height * window.devicePixelRatio;
-              ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-              
-              const w = rect.width; const h = rect.height;
-              ctx.clearRect(0, 0, w, h);
-
-              // Grid lines
-              ctx.strokeStyle = '#1f1f1f'; ctx.lineWidth = 1;
-              ctx.beginPath(); ctx.moveTo(0, h/2); ctx.lineTo(w, h/2); ctx.stroke();
-              ctx.beginPath(); ctx.moveTo(w/2, 0); ctx.lineTo(w/2, h); ctx.stroke();
-
-              const maxVal = Math.max(...rxHistory, ...txHistory, 1024); // Minimal 1KB scale
-              
-              function renderLine(data, color, shadowColor) {
-                ctx.beginPath();
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 2;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                ctx.shadowBlur = 12;
-                ctx.shadowColor = shadowColor;
-                
-                for(let i=0; i<data.length; i++) {
-                  const x = (i / (maxPoints - 1)) * w;
-                  const y = h - ((data[i] / maxVal) * h * 0.9); // 10% padding top
-                  if(i === 0) ctx.moveTo(x, y);
-                  else ctx.lineTo(x, y);
-                }
-                ctx.stroke();
-                ctx.shadowBlur = 0; // Reset
-              }
-
-              renderLine(rxHistory, '#00df89', 'rgba(0, 223, 137, 0.5)'); // Green RX
-              renderLine(txHistory, '#0088FF', 'rgba(0, 136, 255, 0.5)'); // Blue TX
-            }
-
-            async function refreshDashboardStats() {
-              try {
-                const res = await fetch('/api/stats'); const data = await res.json();
-                
-                document.getElementById('uptime-field').innerText = formatTime(data.uptime);
-                
-                // Update CPU & RAM
-                document.getElementById('cpu-val').innerText = data.cpu + '%';
-                document.getElementById('cpu-bar').style.width = data.cpu + '%';
-                document.getElementById('cpu-bar').style.backgroundColor = data.cpu > 80 ? 'var(--status-red)' : 'var(--accent-cyan)';
-                
-                document.getElementById('ram-val').innerText = data.ram + '%';
-                document.getElementById('ram-bar').style.width = data.ram + '%';
-                document.getElementById('ram-bar').style.backgroundColor = data.ram > 85 ? 'var(--status-red)' : 'var(--accent-purple)';
-
-                // Calculate Speed
-                let rxSpeed = 0, txSpeed = 0;
-                if (!isFirstRender) {
-                  rxSpeed = Math.max(0, data.rx - lastRx);
-                  txSpeed = Math.max(0, data.tx - lastTx);
-                }
-                isFirstRender = false;
-                lastRx = data.rx; lastTx = data.tx;
-
-                // Update Text
-                document.getElementById('dl-total').innerText = formatBytes(data.rx);
-                document.getElementById('ul-total').innerText = formatBytes(data.tx);
-                document.getElementById('dl-speed').innerText = '↓ ' + formatBytes(rxSpeed) + '/s';
-                document.getElementById('ul-speed').innerText = '↑ ' + formatBytes(txSpeed) + '/s';
-
-                // Update Chart
-                rxHistory.push(rxSpeed); rxHistory.shift();
-                txHistory.push(txSpeed); txHistory.shift();
-                drawChart();
-
-              } catch (e) {}
-            }
-            
-            refreshDashboardStats(); setInterval(refreshDashboardStats, 1000);
-            window.addEventListener('resize', drawChart);
-
-            async function generate(network, protocol) {
+            let activeBtn = null;
+            async function generate(network, protocol, el){
               const outputEl = document.getElementById('config-output');
-              outputEl.value = 'Loading...'; document.getElementById('copy-btn').innerText = 'Copy';
-              try {
-                const res = await fetch('/api/config'); const data = await res.json();
-                outputEl.value = data[network][protocol];
-              } catch (e) { outputEl.value = 'Gagal mengambil konfigurasi.'; }
+              const hint = document.getElementById('hint');
+              if(activeBtn) activeBtn.classList.remove('active');
+              if(el){ el.classList.add('active'); activeBtn = el; }
+              outputEl.value = 'Loading…';
+              hint.textContent = 'Fetching configuration…';
+              document.getElementById('copy-btn').textContent = 'Copy';
+              try{
+                const res = await fetch('/api/config');
+                const data = await res.json();
+                const val = data[network][protocol];
+                outputEl.value = val;
+                if(val && val.startsWith('Menunggu')) hint.textContent = 'Tunnel not ready yet. Try again in a few seconds.';
+                else hint.textContent = network === 'native' ? 'SNI mode — uses current host as SNI.' : 'CDN mode — uses Cloudflare tunnel domain.';
+                outputEl.focus(); outputEl.select();
+              }catch(e){
+                outputEl.value = '';
+                hint.textContent = 'Failed to load configuration.';
+              }
             }
-
-            function copyConfig() {
+            function copyConfig(){
               const el = document.getElementById('config-output');
-              if (!el.value || el.value.includes('Loading')) return; 
-              el.select(); el.setSelectionRange(0, 99999);
-              navigator.clipboard.writeText(el.value).then(() => {
-                const btn = document.getElementById('copy-btn'); btn.innerText = 'Copied!';
-                setTimeout(() => { if (btn.innerText === 'Copied!') btn.innerText = 'Copy'; }, 2000);
+              const hint = document.getElementById('hint');
+              if(!el.value || el.value === 'Loading…') return;
+              navigator.clipboard.writeText(el.value).then(()=>{
+                const btn = document.getElementById('copy-btn');
+                const prev = btn.textContent;
+                btn.textContent = 'Copied';
+                hint.textContent = 'Copied to clipboard.';
+                setTimeout(()=>{ if(btn.textContent==='Copied'){ btn.textContent='Copy'; hint.textContent='Ready.'; } }, 1800);
+              }).catch(()=>{
+                el.select(); document.execCommand('copy');
+                const btn = document.getElementById('copy-btn');
+                btn.textContent = 'Copied';
+                setTimeout(()=> btn.textContent='Copy', 1500);
               });
             }
           </script>
@@ -560,7 +409,6 @@ class HybridServer {
     ws.on('message', async (message) => {
       try {
         const chunk = Buffer.from(message);
-        this.stats.rx += chunk.length;
         if (remoteSocketWrapper.value) return remoteSocketWrapper.value.write(chunk);
 
         const protocol = await this.protocolSniffer(chunk);
@@ -592,7 +440,6 @@ class HybridServer {
       
       let header = responseHeader;
       tcpSocket.on('data', (chunk) => {
-        this.stats.tx += chunk.length;
         if (webSocket.readyState !== WS_READY_STATE_OPEN) return tcpSocket.destroy();
         if (header) { webSocket.send(Buffer.concat([Buffer.from(header), chunk])); header = null; } 
         else webSocket.send(chunk);
@@ -612,7 +459,6 @@ class HybridServer {
         udpSocket.send(dataChunk, targetPort, targetAddress);
         
         udpSocket.on('message', (message) => {
-          this.stats.tx += message.length;
           if (webSocket.readyState === WS_READY_STATE_OPEN) {
             if (header) { webSocket.send(Buffer.concat([Buffer.from(header), message])); header = null; } 
             else webSocket.send(message);
