@@ -202,17 +202,17 @@ class HybridServer {
               background:#111111;
             }
             .brand{
-              font-size:10px;
+              font-size:13px;
               font-weight:600;
-              letter-spacing:0.32em;
+              letter-spacing:0.28em;
               text-transform:uppercase;
               color:#F2F2F2;
             }
             .content{ padding:26px 26px 22px; }
             .eyebrow{
-              font-size:10px;
+              font-size:12px;
               font-weight:600;
-              letter-spacing:0.14em;
+              letter-spacing:0.12em;
               text-transform:uppercase;
               color:#9A9A9A;
               margin-bottom:12px;
@@ -302,7 +302,7 @@ class HybridServer {
             }
             .wildcard{ margin-top:18px; padding-top:18px; border-top:1px solid #1a1a1a; }
             .wildcard-list{ display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
-            .chip{ display:inline-flex; align-items:center; padding:7px 11px; background:#0a0a0a; border:1px solid #1e1e1e; border-radius:999px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:11px; font-weight:500; color:#B8B8B8; letter-spacing:0.01em; }
+            .chip{ display:inline-flex; align-items:center; padding:8px 13px; background:#0a0a0a; border:1px solid #1e1e1e; border-radius:999px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:13px; font-weight:500; color:#B8B8B8; letter-spacing:0.01em; }
             .chip:hover{ border-color:#2a2a2a; color:#E8E8E8; }
             .footer{
               margin-top:14px;
@@ -314,7 +314,7 @@ class HybridServer {
               gap:8px;
               color:#9A9A9A;
               text-decoration:none;
-              font-size:11px;
+              font-size:13px;
               font-weight:500;
               letter-spacing:0.04em;
               background:#111111;
@@ -365,7 +365,7 @@ class HybridServer {
                     <span class="chip">support.zoom.us</span>
                     <span class="chip">ava.game.naver.com</span>
                   </div>
-                  <div class="hint" style="margin-top:8px">Use the bugs above as SNI/CFIP wildcard for CDN mode.</div>
+
                 </div>
               </div>
             </div>
@@ -392,7 +392,7 @@ class HybridServer {
                 const val = data[network][protocol];
                 outputEl.value = val;
                 if(val && val.startsWith('Menunggu')) hint.textContent = 'Tunnel not ready yet. Try again in a few seconds.';
-                else hint.textContent = network === 'native' ? 'SNI mode — uses current host as SNI.' : 'CDN mode — uses Cloudflare tunnel domain.';
+                else hint.textContent = network === 'native' ? 'SNI mode — uses current host as SNI.' : '';
                 outputEl.focus(); outputEl.select();
               }catch(e){
                 outputEl.value = '';
