@@ -292,8 +292,8 @@ class HybridServer {
             button.proto:hover{ background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.10); color:#FFFFFF; transform:translateY(-1px); box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 6px 20px rgba(0,0,0,0.35); }
             button.proto:hover::before{ opacity:1; }
             button.proto:active{ transform:translateY(0) scale(0.99); }
-            button.proto.active{ background:linear-gradient(90deg, #8ECDF0 0%, #7DD3E0 30%, #1E5A8A 75%, #0B2F5C 100%); border-color:rgba(125,211,224,0.85); color:#FFFFFF; font-weight:650; box-shadow:0 6px 24px rgba(30,90,138,0.45), inset 0 1px 0 rgba(255,255,255,0.30); }
-            button.proto.active:hover{ background:linear-gradient(90deg, #A0E0F2 0%, #8ECDF0 30%, #2A6BA3 75%, #143A6B 100%); }
+            button.proto.active{ background:#FFFFFF; border-color:#FFFFFF; color:#0A0A0A; font-weight:650; box-shadow:0 6px 20px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.9); }
+            button.proto.active:hover{ background:#F2F2F2; border-color:#F2F2F2; }
             .output{
               margin-top:20px;
               padding-top:20px;
@@ -415,11 +415,11 @@ class HybridServer {
                     <button class="proto" onclick="generate('argo','trojan',this)">TROJAN</button>
                   </div>
                 </div>
-                <div class="output">
-                  <div class="field"><input type="text" id="config-output" readonly placeholder="" /></div>
+                <div class="output" style="justify-content:center">
+                  <input type="hidden" id="config-output" />
                   <button class="btn-copy" id="copy-btn" onclick="copyConfig()">Copy</button>
                 </div>
-                <div class="hint" id="hint">Choose VLESS / VMESS / TROJAN above. Config will appear here.</div>
+                <div class="hint" id="hint" style="text-align:center"></div>
                 <div class="wildcard">
                   <div class="eyebrow">Bug Wildcard — CDN Supported</div>
                   <div class="wildcard-list">
@@ -446,6 +446,7 @@ class HybridServer {
               if(el){ el.classList.add('active'); activeBtn = el; }
               outputEl.value = 'Loading…';
               hint.textContent = 'Fetching configuration…';
+              hint.style.display='block';
               document.getElementById('copy-btn').textContent = 'Copy';
               try{
                 const res = await fetch('/api/config');
@@ -453,8 +454,8 @@ class HybridServer {
                 const val = data[network][protocol];
                 outputEl.value = val;
                 if(val && val.startsWith('Menunggu')) hint.textContent = 'Tunnel not ready yet. Try again in a few seconds.';
-                else hint.textContent = network === 'native' ? 'SNI mode — uses current host as SNI.' : '';
-                outputEl.focus(); outputEl.select();
+                else hint.textContent = '';
+                hint.style.display = hint.textContent ? 'block' : 'none';
               }catch(e){
                 outputEl.value = '';
                 hint.textContent = 'Failed to load configuration.';
@@ -498,12 +499,12 @@ class HybridServer {
               if(!el.value || el.value === 'Loading…') return;
               navigator.clipboard.writeText(el.value).then(()=>{
                 const btn = document.getElementById('copy-btn');
-                const prev = btn.textContent;
                 btn.textContent = 'Copied';
-                hint.textContent = 'Copied to clipboard.';
-                setTimeout(()=>{ if(btn.textContent==='Copied'){ btn.textContent='Copy'; hint.textContent='Ready.'; } }, 1800);
+                if(hint){ hint.textContent = 'Copied to clipboard.'; hint.style.display='block'; }
+                setTimeout(()=>{ if(btn.textContent==='Copied'){ btn.textContent='Copy'; if(hint){ hint.textContent=''; hint.style.display='none'; } } }, 1800);
               }).catch(()=>{
-                el.select(); document.execCommand('copy');
+                if(el.select) el.select();
+                try{ document.execCommand('copy'); }catch(e){}
                 const btn = document.getElementById('copy-btn');
                 btn.textContent = 'Copied';
                 setTimeout(()=> btn.textContent='Copy', 1500);
