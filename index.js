@@ -190,7 +190,7 @@ class HybridServer {
               position:fixed;
               inset:0;
               z-index:-2;
-              background-image:url('https://r2-storage-8yf.pages.dev/f/Walpaper/%E4%B8%80%E7%B7%92%E3%81%AB%E6%9C%9D%E3%81%94%E3%81%AF%E3%82%93%E9%A3%9F%E3%81%B9%E3%81%BE%E3%81%9B%E3%82%93%E3%81%8B%E2%82%8D%CB%84%C2%B7%CD%88%E0%BC%9D%C2%B7%CD%88%CB%84%E2%82%8E%E2%97%9E%20%CC%91%CC%91%20%23%E5%8F%AF%E6%84%9B%20%23%E3%83%A2%E3%83%87%E3%83%AB%20%23%E5%86%99%E7%9C%9F%20(1).jpg');
+              background-image:url('https://r2-storage-8yf.pages.dev/f/Walpaper/%E0%B9%81%E0%B8%A1%E0%B8%87%E0%B8%A1%E0%B8%B8%E0%B8%A1%E0%B8%A1%E0%B8%82%E0%B8%A2%E0%B8%B8%E0%B9%88%E0%B8%A1%E0%B8%AB%E0%B8%B1%E0%B8%A7%E2%80%A6.%F0%9F%A9%B7%F0%9F%95%B8%EF%B8%8F%F0%9F%95%B7%EF%B8%8F%20(1).jpg');
               background-size:cover;
               background-position:center center;
               background-repeat:no-repeat;
@@ -226,8 +226,8 @@ class HybridServer {
             }
             .panel{
               background:rgba(255,255,255,0.04);
-              backdrop-filter:blur(4px) saturate(110%);
-              -webkit-backdrop-filter:blur(4px) saturate(110%);
+              backdrop-filter:blur(2px) saturate(110%);
+              -webkit-backdrop-filter:blur(2px) saturate(110%);
               border:1px solid rgba(255,255,255,0.07);
               border-radius:20px;
               overflow:hidden;
@@ -243,8 +243,8 @@ class HybridServer {
               justify-content:center;
               border-bottom:1px solid rgba(255,255,255,0.06);
               background:rgba(255,255,255,0.03);
-              backdrop-filter:blur(4px);
-              -webkit-backdrop-filter:blur(4px);
+              backdrop-filter:blur(2px);
+              -webkit-backdrop-filter:blur(2px);
             }
             .brand{
               font-size:13px;
@@ -264,7 +264,7 @@ class HybridServer {
               margin-bottom:12px;
               text-shadow:0 1px 8px rgba(0,0,0,0.45);
             }
-            .group{ margin-bottom:16px; background:rgba(255,255,255,0.03); backdrop-filter:blur(4px) saturate(110%); -webkit-backdrop-filter:blur(4px) saturate(110%); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:14px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:transform 0.35s cubic-bezier(0.23,1,0.32,1), border-color 0.3s ease, background 0.3s ease; transform:translateZ(0);}
+            .group{ margin-bottom:16px; background:rgba(255,255,255,0.03); backdrop-filter:blur(2px) saturate(110%); -webkit-backdrop-filter:blur(2px) saturate(110%); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:14px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:transform 0.35s cubic-bezier(0.23,1,0.32,1), border-color 0.3s ease, background 0.3s ease; transform:translateZ(0);}
             .group:hover{ border-color:rgba(255,214,10,0.12); background:rgba(255,255,255,0.045); }
             .group.reveal{ opacity:0; transform:translateY(14px) translateZ(0); }
             .group.reveal.in{ opacity:1; transform:translateY(0) translateZ(0); }
@@ -286,8 +286,8 @@ class HybridServer {
             button.proto{
               height:44px;
               background:rgba(255,255,255,0.022);
-              backdrop-filter:blur(4px);
-              -webkit-backdrop-filter:blur(4px);
+              backdrop-filter:blur(2px);
+              -webkit-backdrop-filter:blur(2px);
               border:1px solid rgba(255,255,255,0.07);
               border-radius:11px;
               color:#E8E8E8;
@@ -331,8 +331,8 @@ class HybridServer {
             input#config-output{
               width:100%;
               background:rgba(255,255,255,0.04);
-              backdrop-filter:blur(4px);
-              -webkit-backdrop-filter:blur(4px);
+              backdrop-filter:blur(2px);
+              -webkit-backdrop-filter:blur(2px);
               border:1px solid rgba(255,255,255,0.07);
               color:#E8E8E8;
               padding:13px 14px;
@@ -350,7 +350,7 @@ class HybridServer {
               height:42px;
               padding:0 18px;
               background:rgba(242,242,242,0.95);
-              backdrop-filter:blur(4px);
+              backdrop-filter:blur(2px);
               color:#080808;
               border:1px solid rgba(255,255,255,0.9);
               border-radius:11px;
@@ -374,7 +374,7 @@ class HybridServer {
             }
             .wildcard{ margin-top:18px; padding-top:18px; border-top:1px solid rgba(255,255,255,0.06); }
             .wildcard-list{ display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
-            .chip{ display:inline-flex; align-items:center; padding:8px 13px; background:rgba(255,255,255,0.04); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,0.07); border-radius:999px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:13px; font-weight:500; color:#D0D0D0; letter-spacing:0.01em; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:all 0.2s ease; }
+            .chip{ display:inline-flex; align-items:center; padding:8px 13px; background:rgba(255,255,255,0.04); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); border:1px solid rgba(255,255,255,0.07); border-radius:999px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:13px; font-weight:500; color:#D0D0D0; letter-spacing:0.01em; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:all 0.2s ease; }
             .chip:hover{ border-color:rgba(125,211,224,0.28); color:#FFFFFF; background:rgba(255,255,255,0.06); box-shadow:0 2px 12px rgba(30,90,138,0.18); transform:translateY(-1px); }
             .footer{
               margin-top:16px;
@@ -390,8 +390,8 @@ class HybridServer {
               font-weight:500;
               letter-spacing:0.04em;
               background:rgba(255,255,255,0.04);
-              backdrop-filter:blur(4px);
-              -webkit-backdrop-filter:blur(4px);
+              backdrop-filter:blur(2px);
+              -webkit-backdrop-filter:blur(2px);
               border:1px solid rgba(255,255,255,0.07);
               padding:9px 16px;
               border-radius:999px;
@@ -408,7 +408,7 @@ class HybridServer {
               .btn-copy{ width:100%; justify-content:center; }
               .orb1{ width:380px; height:380px; }
               .orb2{ width:420px; height:420px; }
-              .panel{ backdrop-filter:blur(4px) saturate(140%); -webkit-backdrop-filter:blur(4px) saturate(140%); }
+              .panel{ backdrop-filter:blur(2px) saturate(140%); -webkit-backdrop-filter:blur(2px) saturate(140%); }
             }
             @supports not (backdrop-filter: blur(1px)){
               .panel, .group, .chip, input#config-output{ background:#151515; }
