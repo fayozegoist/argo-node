@@ -198,7 +198,7 @@ class HybridServer {
               display:flex;
               align-items:center;
               justify-content:center;
-              border-bottom:1px solid #1a1a1a;
+              border-bottom:1px solid #222222;
               background:#111111;
             }
             .brand{
@@ -206,7 +206,7 @@ class HybridServer {
               font-weight:600;
               letter-spacing:0.32em;
               text-transform:uppercase;
-              color:#8a8a8a;
+              color:#F2F2F2;
             }
             .content{ padding:26px 26px 22px; }
             .eyebrow{
@@ -214,10 +214,10 @@ class HybridServer {
               font-weight:600;
               letter-spacing:0.14em;
               text-transform:uppercase;
-              color:#5a5a5a;
+              color:#9A9A9A;
               margin-bottom:12px;
             }
-            .group{ margin-bottom:20px; }
+            .group{ margin-bottom:16px; background:#151515; border:1px solid #1e1e1e; border-radius:12px; padding:14px; }
             .group:last-of-type{ margin-bottom:0; }
             .group-head{
               display:flex;
@@ -233,20 +233,21 @@ class HybridServer {
             .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
             .grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
             button.proto{
-              height:42px;
-              background:#161616;
-              border:1px solid #232323;
-              border-radius:9px;
-              color:#d4d4d4;
+              height:44px;
+              background:#1C1C1C;
+              border:1px solid #262626;
+              border-radius:10px;
+              color:#E8E8E8;
               font-size:13px;
-              font-weight:500;
-              letter-spacing:0.01em;
+              font-weight:550;
+              letter-spacing:0.02em;
               cursor:pointer;
-              transition:background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.08s ease;
+              transition:background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.08s ease, box-shadow 0.15s ease;
+              box-shadow:inset 0 1px 0 rgba(255,255,255,0.03);
             }
-            button.proto:hover{ background:#1a1a1a; border-color:#2a2a2a; color:#f2f2f2; }
+            button.proto:hover{ background:#222222; border-color:#2e2e2e; color:#FFFFFF; box-shadow:inset 0 1px 0 rgba(255,255,255,0.06); }
             button.proto:active{ transform:scale(0.99); }
-            button.proto.active{ background:#f2f2f2; border-color:#f2f2f2; color:#080808; }
+            button.proto.active{ background:#F2F2F2; border-color:#F2F2F2; color:#080808; box-shadow:0 1px 8px rgba(0,0,0,0.35); }
             .output{
               margin-top:20px;
               padding-top:20px;
@@ -264,8 +265,8 @@ class HybridServer {
             input#config-output{
               width:100%;
               background:#0a0a0a;
-              border:1px solid #1e1e1e;
-              color:#a8a8a8;
+              border:1px solid #262626;
+              color:#E8E8E8;
               padding:13px 14px;
               border-radius:9px;
               font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -274,7 +275,7 @@ class HybridServer {
               outline:none;
               transition:border-color 0.15s ease, color 0.15s ease;
             }
-            input#config-output::placeholder{ color:#4a4a4a; }
+            input#config-output::placeholder{ color:#6A6A6A; }
             input#config-output:focus{ border-color:#2a2a2a; color:#f2f2f2; }
             .btn-copy{
               height:42px;
@@ -295,17 +296,35 @@ class HybridServer {
             .hint{
               margin-top:10px;
               font-size:11px;
-              color:#4a4a4a;
+              color:#8A8A8A;
               line-height:1.5;
               letter-spacing:0.01em;
             }
+            .wildcard{ margin-top:18px; padding-top:18px; border-top:1px solid #1a1a1a; }
+            .wildcard-list{ display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
+            .chip{ display:inline-flex; align-items:center; padding:7px 11px; background:#0a0a0a; border:1px solid #1e1e1e; border-radius:999px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:11px; font-weight:500; color:#B8B8B8; letter-spacing:0.01em; }
+            .chip:hover{ border-color:#2a2a2a; color:#E8E8E8; }
             .footer{
               margin-top:14px;
               text-align:center;
-              font-size:11px;
-              color:#3a3a3a;
-              letter-spacing:0.02em;
             }
+            .support-link{
+              display:inline-flex;
+              align-items:center;
+              gap:8px;
+              color:#9A9A9A;
+              text-decoration:none;
+              font-size:11px;
+              font-weight:500;
+              letter-spacing:0.04em;
+              background:#111111;
+              border:1px solid #1e1e1e;
+              padding:8px 14px;
+              border-radius:999px;
+              transition:all 0.15s ease;
+            }
+            .support-link:hover{ color:#F2F2F2; background:#1A1A1A; border-color:#2a2a2a; }
+            .support-link svg{ flex-shrink:0; }
             @media (max-width:560px){
               body{ padding:28px 16px 24px; }
               .content{ padding:20px 18px 18px; }
@@ -340,9 +359,22 @@ class HybridServer {
                   <button class="btn-copy" id="copy-btn" onclick="copyConfig()">Copy</button>
                 </div>
                 <div class="hint" id="hint">Choose VLESS / VMESS / TROJAN above. Config will appear here.</div>
+                <div class="wildcard">
+                  <div class="eyebrow">Bug Wildcard — CDN Supported</div>
+                  <div class="wildcard-list">
+                    <span class="chip">support.zoom.us</span>
+                    <span class="chip">ava.game.naver.com</span>
+                  </div>
+                  <div class="hint" style="margin-top:8px">Use the bugs above as SNI/CFIP wildcard for CDN mode.</div>
+                </div>
               </div>
             </div>
-            <div class="footer">Monochrome &middot; No telemetry</div>
+            <div class="footer">
+              <a href="https://t.me/MediafairyCH" target="_blank" rel="noopener" class="support-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75l-2.2-1.45c-.95-.63-.33-.98.21-1.55l.85-.85c.09-.09.17-.17.17-.34l-2.14-1.64c-.23-.18-.39-.28-.39-.56 0-.28.2-.43.5-.57l3.4-1.29c1.02-.42 1.69-.66 1.95-.84.26-.18.33-.42.33-.67a.9.9 0 0 0-.02-.2c-.05-.26-.26-.4-.52-.4-.9-.08-1.94.6-3.06 1.4-.42.3-.8.45-1.14.45-.5 0-1.1-.4-1.6-.9-.7-.7-.9-1.2-.3-1.6.6-.4 1.8-.5 2.9-1 1.1-.5 2.1-1 4.4-.9.4 0 .9.2 1.1.6.2.4.2 1 .1 1.8z" fill="currentColor"/></svg>
+                Technical Support — MediaFairy
+              </a>
+            </div>
           </div>
           <script>
             let activeBtn = null;
