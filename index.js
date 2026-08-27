@@ -203,7 +203,7 @@ class HybridServer {
               position:fixed;
               inset:0;
               z-index:-1;
-              background:linear-gradient(180deg, rgba(7,8,10,0.04) 0%, rgba(7,8,10,0.12) 100%);
+              background:linear-gradient(180deg, rgba(7,8,10,0.02) 0%, rgba(7,8,10,0.06) 100%);
               backdrop-filter:brightness(0.95);
               -webkit-backdrop-filter:brightness(0.95);
               pointer-events:none;
@@ -225,7 +225,7 @@ class HybridServer {
               will-change:transform;
             }
             .panel{
-              background:rgba(17,17,19,0.08);
+              background:rgba(255,255,255,0.04);
               backdrop-filter:blur(12px) saturate(120%);
               -webkit-backdrop-filter:blur(12px) saturate(120%);
               border:1px solid rgba(255,255,255,0.07);
@@ -242,7 +242,7 @@ class HybridServer {
               align-items:center;
               justify-content:center;
               border-bottom:1px solid rgba(255,255,255,0.06);
-              background:linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+              background:rgba(255,255,255,0.03);
               backdrop-filter:blur(16px);
               -webkit-backdrop-filter:blur(16px);
             }
@@ -264,7 +264,7 @@ class HybridServer {
               margin-bottom:12px;
               text-shadow:0 1px 8px rgba(0,0,0,0.45);
             }
-            .group{ margin-bottom:16px; background:rgba(255,255,255,0.006); backdrop-filter:blur(8px) saturate(125%); -webkit-backdrop-filter:blur(14px) saturate(125%); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:14px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:transform 0.35s cubic-bezier(0.23,1,0.32,1), border-color 0.3s ease, background 0.3s ease; transform:translateZ(0);}
+            .group{ margin-bottom:16px; background:rgba(255,255,255,0.03); backdrop-filter:blur(8px) saturate(125%); -webkit-backdrop-filter:blur(14px) saturate(125%); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:14px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:transform 0.35s cubic-bezier(0.23,1,0.32,1), border-color 0.3s ease, background 0.3s ease; transform:translateZ(0);}
             .group:hover{ border-color:rgba(255,214,10,0.12); background:rgba(255,255,255,0.045); }
             .group.reveal{ opacity:0; transform:translateY(14px) translateZ(0); }
             .group.reveal.in{ opacity:1; transform:translateY(0) translateZ(0); }
@@ -330,7 +330,7 @@ class HybridServer {
             }
             input#config-output{
               width:100%;
-              background:rgba(10,10,12,0.6);
+              background:rgba(255,255,255,0.04);
               backdrop-filter:blur(12px);
               -webkit-backdrop-filter:blur(12px);
               border:1px solid rgba(255,255,255,0.07);
@@ -374,7 +374,7 @@ class HybridServer {
             }
             .wildcard{ margin-top:18px; padding-top:18px; border-top:1px solid rgba(255,255,255,0.06); }
             .wildcard-list{ display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
-            .chip{ display:inline-flex; align-items:center; padding:8px 13px; background:rgba(255,255,255,0.008); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.07); border-radius:999px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:13px; font-weight:500; color:#D0D0D0; letter-spacing:0.01em; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:all 0.2s ease; }
+            .chip{ display:inline-flex; align-items:center; padding:8px 13px; background:rgba(255,255,255,0.04); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.07); border-radius:999px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:13px; font-weight:500; color:#D0D0D0; letter-spacing:0.01em; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:all 0.2s ease; }
             .chip:hover{ border-color:rgba(125,211,224,0.28); color:#FFFFFF; background:rgba(255,255,255,0.06); box-shadow:0 2px 12px rgba(30,90,138,0.18); transform:translateY(-1px); }
             .footer{
               margin-top:16px;
