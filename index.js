@@ -175,11 +175,6 @@ class HybridServer {
             html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
             body{
               background:#07080A;
-              background-image:
-                radial-gradient(820px 520px at 15% 12%, rgba(255,214,10,0.08) 0%, transparent 58%),
-                radial-gradient(720px 460px at 85% 88%, rgba(0,229,255,0.06) 0%, transparent 60%),
-                radial-gradient(600px 400px at 50% 50%, rgba(124,77,255,0.04) 0%, transparent 70%),
-                linear-gradient(180deg, #07080A 0%, #0A0B0F 100%);
               color:#F2F2F2;
               font-family:-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
               min-height:100vh;
@@ -189,13 +184,37 @@ class HybridServer {
               padding:56px 20px 40px;
               overflow-x:hidden;
               perspective:1200px;
+              position:relative;
             }
-            .bg-orbs{ position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
-            .orb{ position:absolute; border-radius:50%; filter:blur(60px); opacity:0.55; will-change:transform; }
-            .orb1{ width:560px; height:560px; left:-120px; top:-80px; background:radial-gradient(circle at 30% 30%, rgba(255,214,10,0.18) 0%, rgba(255,165,0,0.08) 35%, transparent 70%); animation:floatA 18s ease-in-out infinite; }
-            .orb2{ width:640px; height:640px; right:-140px; bottom:-120px; background:radial-gradient(circle at 70% 70%, rgba(0,229,255,0.14) 0%, rgba(124,77,255,0.10) 40%, transparent 70%); animation:floatB 22s ease-in-out infinite; }
-            @keyframes floatA{ 0%,100%{ transform:translate3d(0,0,0) scale(1)} 50%{ transform:translate3d(18px,22px,0) scale(1.04)}}
-            @keyframes floatB{ 0%,100%{ transform:translate3d(0,0,0) scale(1)} 50%{ transform:translate3d(-16px,-18px,0) scale(1.03)}}
+            .bg-image{
+              position:fixed;
+              inset:0;
+              z-index:-2;
+              background-image:url('https://r2-storage-8yf.pages.dev/f/Walpaper/%E4%B8%80%E7%B7%92%E3%81%AB%E6%9C%9D%E3%81%94%E3%81%AF%E3%82%93%E9%A3%9F%E3%81%B9%E3%81%BE%E3%81%9B%E3%82%93%E3%81%8B%E2%82%8D%CB%84%C2%B7%CD%88%E0%BC%9D%C2%B7%CD%88%CB%84%E2%82%8E%E2%97%9E%20%CC%91%CC%91%20%23%E5%8F%AF%E6%84%9B%20%23%E3%83%A2%E3%83%87%E3%83%AB%20%23%E5%86%99%E7%9C%9F%20(1).jpg');
+              background-size:cover;
+              background-position:center center;
+              background-repeat:no-repeat;
+              filter:brightness(0.72) contrast(1.02) saturate(1.05);
+              animation:kenBurns 28s ease-in-out infinite alternate;
+              will-change:transform;
+              transform-origin:center center;
+            }
+            .bg-overlay{
+              position:fixed;
+              inset:0;
+              z-index:-1;
+              background:linear-gradient(180deg, rgba(7,8,10,0.32) 0%, rgba(7,8,10,0.55) 100%);
+              backdrop-filter:brightness(0.95);
+              -webkit-backdrop-filter:brightness(0.95);
+              pointer-events:none;
+            }
+            .bg-orbs{ position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:0; opacity:0.35; }
+            .orb{ position:absolute; border-radius:50%; filter:blur(60px); opacity:0.28; will-change:transform; }
+            .orb1{ width:520px; height:520px; left:-100px; top:-60px; background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.10) 0%, transparent 70%); animation:floatA 20s ease-in-out infinite; }
+            .orb2{ width:560px; height:560px; right:-120px; bottom:-100px; background:radial-gradient(circle at 70% 70%, rgba(255,255,255,0.06) 0%, transparent 70%); animation:floatB 24s ease-in-out infinite; }
+            @keyframes kenBurns{ 0%{ transform:scale(1)} 50%{ transform:scale(1.04)} 100%{ transform:scale(1.07)}}
+            @keyframes floatA{ 0%,100%{ transform:translate3d(0,0,0) scale(1)} 50%{ transform:translate3d(12px,16px,0) scale(1.03)}}
+            @keyframes floatB{ 0%,100%{ transform:translate3d(0,0,0) scale(1)} 50%{ transform:translate3d(-10px,-12px,0) scale(1.02)}}
             .shell{
               width:100%;
               max-width:520px;
@@ -206,10 +225,10 @@ class HybridServer {
               will-change:transform;
             }
             .panel{
-              background:rgba(17,17,19,0.52);
-              backdrop-filter:blur(24px) saturate(150%);
-              -webkit-backdrop-filter:blur(24px) saturate(150%);
-              border:1px solid rgba(255,255,255,0.08);
+              background:rgba(17,17,19,0.28);
+              backdrop-filter:blur(18px) saturate(140%);
+              -webkit-backdrop-filter:blur(18px) saturate(140%);
+              border:1px solid rgba(255,255,255,0.10);
               border-radius:20px;
               overflow:hidden;
               box-shadow:0 16px 48px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06) inset, 0 0 0 1px rgba(255,255,255,0.02) inset;
@@ -229,11 +248,11 @@ class HybridServer {
             }
             .brand{
               font-size:13px;
-              font-weight:600;
+              font-weight:700;
               letter-spacing:0.28em;
               text-transform:uppercase;
-              color:#F2F2F2;
-              text-shadow:0 1px 12px rgba(125,211,224,0.22);
+              color:#FFFFFF;
+              text-shadow:0 1px 14px rgba(0,0,0,0.55), 0 0 18px rgba(0,0,0,0.35);
             }
             .content{ padding:26px 26px 22px; }
             .eyebrow{
@@ -241,10 +260,11 @@ class HybridServer {
               font-weight:600;
               letter-spacing:0.12em;
               text-transform:uppercase;
-              color:#9A9A9A;
+              color:#E8E8E8;
               margin-bottom:12px;
+              text-shadow:0 1px 8px rgba(0,0,0,0.45);
             }
-            .group{ margin-bottom:16px; background:rgba(255,255,255,0.035); backdrop-filter:blur(16px) saturate(130%); -webkit-backdrop-filter:blur(16px) saturate(130%); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:transform 0.35s cubic-bezier(0.23,1,0.32,1), border-color 0.3s ease, background 0.3s ease; transform:translateZ(0);}
+            .group{ margin-bottom:16px; background:rgba(255,255,255,0.022); backdrop-filter:blur(14px) saturate(125%); -webkit-backdrop-filter:blur(14px) saturate(125%); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:14px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:transform 0.35s cubic-bezier(0.23,1,0.32,1), border-color 0.3s ease, background 0.3s ease; transform:translateZ(0);}
             .group:hover{ border-color:rgba(255,214,10,0.12); background:rgba(255,255,255,0.045); }
             .group.reveal{ opacity:0; transform:translateY(14px) translateZ(0); }
             .group.reveal.in{ opacity:1; transform:translateY(0) translateZ(0); }
@@ -265,7 +285,7 @@ class HybridServer {
             .grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
             button.proto{
               height:44px;
-              background:rgba(255,255,255,0.035);
+              background:rgba(255,255,255,0.022);
               backdrop-filter:blur(12px);
               -webkit-backdrop-filter:blur(12px);
               border:1px solid rgba(255,255,255,0.07);
@@ -347,13 +367,14 @@ class HybridServer {
             .hint{
               margin-top:10px;
               font-size:11px;
-              color:#8A8A8A;
+              color:#D8D8D8;
+              text-shadow:0 1px 6px rgba(0,0,0,0.45);
               line-height:1.5;
               letter-spacing:0.01em;
             }
             .wildcard{ margin-top:18px; padding-top:18px; border-top:1px solid rgba(255,255,255,0.06); }
             .wildcard-list{ display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
-            .chip{ display:inline-flex; align-items:center; padding:8px 13px; background:rgba(255,255,255,0.04); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.07); border-radius:999px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:13px; font-weight:500; color:#D0D0D0; letter-spacing:0.01em; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:all 0.2s ease; }
+            .chip{ display:inline-flex; align-items:center; padding:8px 13px; background:rgba(255,255,255,0.025); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.07); border-radius:999px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:13px; font-weight:500; color:#D0D0D0; letter-spacing:0.01em; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:all 0.2s ease; }
             .chip:hover{ border-color:rgba(125,211,224,0.28); color:#FFFFFF; background:rgba(255,255,255,0.06); box-shadow:0 2px 12px rgba(30,90,138,0.18); transform:translateY(-1px); }
             .footer{
               margin-top:16px;
@@ -395,6 +416,8 @@ class HybridServer {
           </style>
         </head>
         <body>
+          <div class="bg-image" aria-hidden="true"></div>
+          <div class="bg-overlay" aria-hidden="true"></div>
           <div class="bg-orbs" aria-hidden="true"><div class="orb orb1"></div><div class="orb orb2"></div></div>
           <div class="shell" id="shell">
             <div class="panel">
