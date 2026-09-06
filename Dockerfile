@@ -1,12 +1,10 @@
-FROM node:20-bookworm-slim
+FROM node:20-alpine
 
-RUN apt-get update && apt-get install -y \
-    ca-certificates curl wget iproute2 procps \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache ca-certificates curl
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm install --omit=dev && npm cache clean --force
 COPY index.js .
 RUN chmod +x index.js
 

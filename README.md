@@ -8,7 +8,6 @@
 
 ## ⚡ Fitur Utama
 * **Dashboard:** Antarmuka UI premium (macOS-inspired).
-* **Live Telemetry:** Monitoring System Uptime, CPU, RAM, dan Live Network Traffic Chart langsung dari Web.
 * **Hybrid Mode:** Mendukung konfigurasi Bug CDN & SNI.
 * **Multi-Protocol:** VLESS, VMESS, dan TROJAN via protokol WebSocket (WS).
 * **Zero Trust Integration:** Terhubung otomatis ke Cloudflare Tunnels tanpa perlu membuka *inbound ports* di server asal.
@@ -59,6 +58,33 @@ Untuk melihat tampilan "Dashboard" dan memantau *traffic* server:
 2. Gulir ke bawah hingga menemukan bagian **Networking** > **Public Networking**.
 3. Klik tombol **Generate Domain**.
 4. Klik URL yang dihasilkan oleh Railway tersebut untuk membuka Web Panel.
+
+---
+
+## 🐳 Deployment via Docker Image (ghcr.io)
+
+Alternatif selain deploy dari repo: gunakan image siap-pakai yang di-build otomatis oleh GitHub Actions setiap kali branch `main` di-update.
+
+### Pull Image
+```bash
+docker pull ghcr.io/fayozegoist/argo-fix:latest
+docker run -d \
+  -p 3000:3000 \
+  -e UUID=<uuid-v4-kamu> \
+  -e ARGO_DOMAIN=vpn.domain.com \
+  -e ARGO_AUTH=<token-tunnel> \
+  --name argo-fix \
+  ghcr.io/fayozegoist/argo-fix:latest
+```
+
+### Agar Pull Tanpa Token (Ubah Visibility Package)
+Image di-registry default **private**. Agar bisa di-pull tanpa login/token ghcr:
+1. Setelah workflow **Build & Push Docker Image** selesai run pertama kali, buka halaman profil GitHub kamu → tab **Packages**.
+2. Klik package `argo-fix`.
+3. Masuk **Package settings** → scroll ke bagian **Danger Zone** → **Change visibility** → pilih **Public**.
+4. Ketik nama package untuk konfirmasi, lalu simpan.
+
+> Catatan: Repo tetap **private**, hanya image-nya yang public. Aman karena semua kredensial (`UUID`, `ARGO_AUTH`, `ARGO_DOMAIN`) di-inject via environment variables saat runtime, tidak pernah tersimpan di dalam image.
 
 ---
 

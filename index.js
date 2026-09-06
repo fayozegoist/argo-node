@@ -15,7 +15,12 @@ const exec = promisify(require('child_process').exec);
 // ==================== ENVIRONMENT VARIABLES ====================
 const FILE_PATH = process.env.FILE_PATH || '.tmp';
 const PORT = process.env.PORT || 3000;
-const UUID = process.env.UUID || '9afd1229-b893-40c1-84dd-51e7ce204913';
+const UUID = process.env.UUID || '';
+
+if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(UUID)) {
+  console.error('[FATAL] UUID env wajib diisi dengan format UUID valid (contoh: 9afd1229-b893-40c1-84dd-51e7ce204913).');
+  process.exit(1);
+}
 const ARGO_DOMAIN = process.env.ARGO_DOMAIN || '';
 const ARGO_AUTH = process.env.ARGO_AUTH || '';
 const ARGO_PORT = process.env.ARGO_PORT || 8001;
