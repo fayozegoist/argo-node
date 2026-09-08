@@ -226,7 +226,6 @@ class HybridServer {
               position:relative;
               z-index:1;
               transform-style:preserve-3d;
-              transition:transform 0.6s cubic-bezier(0.23,1,0.32,1);
               will-change:transform;
             }
             .panel{
@@ -271,7 +270,7 @@ class HybridServer {
             }
             .group{ margin-bottom:16px; background:rgba(8,10,14,0.26); backdrop-filter:none; -webkit-backdrop-filter:none; border:1px solid rgba(255,255,255,0.09); border-radius:14px; padding:14px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); transition:transform 0.35s cubic-bezier(0.23,1,0.32,1), border-color 0.3s ease, background 0.3s ease; transform:translateZ(0);}
             .group:hover{ border-color:rgba(255,214,10,0.12); background:rgba(8,10,14,0.32); }
-            .group.reveal{ opacity:0; transform:translateY(14px) translateZ(0); }
+            .group.reveal{ opacity:0; transform:translateY(18px) translateZ(0); transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1), border-color 0.3s ease, background 0.3s ease; }
             .group.reveal.in{ opacity:1; transform:translateY(0) translateZ(0); }
             .group:last-of-type{ margin-bottom:0; }
             .group-head{
@@ -418,6 +417,11 @@ class HybridServer {
             @supports not (backdrop-filter: blur(1px)){
               .panel, .group, .chip, input#config-output{ background:#151515; }
             }
+            @media (prefers-reduced-motion: reduce){
+              .bg-image{ animation:none; }
+              .orb{ animation:none; }
+              .group.reveal{ opacity:1; transform:none; transition:border-color 0.3s ease, background 0.3s ease; }
+            }
           </style>
         </head>
         <body>
@@ -489,32 +493,27 @@ class HybridServer {
                 hint.textContent = 'Failed to load configuration.';
               }
             }
-            // Liquid Glass 3D tilt + parallax + reveal
+            // Smooth eased 3D tilt (lerp interpolation, no transition conflict)
             (function(){
               const shell = document.getElementById('shell');
-              const panel = document.querySelector('.panel');
-              let raf = null, mx = 0, my = 0, sx = 0;
-              function onMove(e){
-                const x = (e.clientX / window.innerWidth - 0.5);
-                const y = (e.clientY / window.innerHeight - 0.5);
-                mx = x * 4; my = y * -3;
-                if(!raf) raf = requestAnimationFrame(apply);
+              if(!shell) return;
+              let tx=0, ty=0, cx=0, cy=0, running=false;
+              function loop(){
+                cx += (tx-cx)*0.07;
+                cy += (ty-cy)*0.07;
+                shell.style.transform = 'rotateY(' + cx.toFixed(3) + 'deg) rotateX(' + cy.toFixed(3) + 'deg)';
+                if(Math.abs(tx-cx) > 0.002 || Math.abs(ty-cy) > 0.002){
+                  requestAnimationFrame(loop);
+                } else { running = false; }
               }
-              function onScroll(){
-                sx = window.scrollY * 0.06;
-                if(!raf) raf = requestAnimationFrame(apply);
-              }
-              function apply(){
-                raf = null;
-                if(shell) shell.style.transform = 'rotateY(' + mx + 'deg) rotateX(' + my + 'deg)';
-                const o1 = document.querySelector('.orb1');
-                const o2 = document.querySelector('.orb2');
-                if(o1) o1.style.transform = 'translate3d(' + (mx*6) + 'px, ' + (sx*0.4) + 'px, 0)';
-                if(o2) o2.style.transform = 'translate3d(' + (mx*-5) + 'px, ' + (-sx*0.35) + 'px, 0)';
-                if(panel) panel.style.transform = 'translateZ(0) translateY(' + (sx*0.02) + 'px)';
-              }
-              window.addEventListener('mousemove', onMove, {passive:true});
-              window.addEventListener('scroll', onScroll, {passive:true});
+              window.addEventListener('mousemove', (e)=>{
+                if(window.matchMedia('(pointer: coarse)').matches) return;
+                tx = (e.clientX/window.innerWidth - 0.5) * 3.2;
+                ty = -(e.clientY/window.innerHeight - 0.5) * 2.6;
+                if(!running){ running = true; requestAnimationFrame(loop); }
+              }, {passive:true});
+            })();
+            (function(){
               const io = new IntersectionObserver((entries)=>{
                 entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add('in'); });
               }, {threshold:0.12});
