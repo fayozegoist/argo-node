@@ -56,7 +56,7 @@ Agar mesin Xray dan tunnel Argo dapat berjalan, kamu wajib memasukkan konfiguras
 Untuk melihat tampilan "Dashboard" dan memantau *traffic* server:
 1. Masuk ke tab **Settings** di aplikasi Railway kamu.
 2. Gulir ke bawah hingga menemukan bagian **Networking** > **Public Networking**.
-3. Klik tombol **Generate Domain**.
+3. Klik tombol **Generate Domain** **Port 8080**.
 4. Klik URL yang dihasilkan oleh Railway tersebut untuk membuka Web Panel.
 
 ---
