@@ -38,7 +38,7 @@ Platform Railway adalah cara termudah dan tercepat untuk menjalankan Gateway Cor
 2. Buka [Railway.app](https://railway.app/) dan *login* menggunakan akun GitHub.
 3. Klik tombol **New Project** pada *dashboard* utama.
 4. Pilih opsi **Deploy from GitHub repo**.
-5. Cari dan pilih repositori `argo-hybrid` yang baru saja kamu *fork*.
+5. Cari dan pilih repositori `argo-node` yang baru saja kamu *fork*.
 6. Klik **Deploy Now**. *(Catatan: Proses deploy awal mungkin akan gagal atau berjalan tanpa VPN karena variabel belum diisi, biarkan saja).*
 
 ### Langkah 2: Tambahkan Environment Variables
@@ -67,20 +67,20 @@ Alternatif selain deploy dari repo: gunakan image siap-pakai yang di-build otoma
 
 ### Pull Image
 ```bash
-docker pull ghcr.io/fayozegoist/argo-fix:latest
+docker pull ghcr.io/fayozegoist/argo-node:latest
 docker run -d \
   -p 3000:3000 \
   -e UUID=<uuid-v4-kamu> \
   -e ARGO_DOMAIN=vpn.domain.com \
   -e ARGO_AUTH=<token-tunnel> \
-  --name argo-fix \
-  ghcr.io/fayozegoist/argo-fix:latest
+  --name argo-node \
+  ghcr.io/fayozegoist/argo-node:latest
 ```
 
 ### Agar Pull Tanpa Token (Ubah Visibility Package)
 Image di-registry default **private**. Agar bisa di-pull tanpa login/token ghcr:
 1. Setelah workflow **Build & Push Docker Image** selesai run pertama kali, buka halaman profil GitHub kamu → tab **Packages**.
-2. Klik package `argo-fix`.
+2. Klik package `argo-node`.
 3. Masuk **Package settings** → scroll ke bagian **Danger Zone** → **Change visibility** → pilih **Public**.
 4. Ketik nama package untuk konfirmasi, lalu simpan.
 
